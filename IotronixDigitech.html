@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IoTronix Digitech — Manufacturing Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#05080d;
+  --bg2:#080d14;
+  --bg3:#0c1320;
+  --surface:#101828;
+  --surface2:#162032;
+  --cyan:#00e5ff;
+  --cyan2:#00b8cc;
+  --orange:#ff6b35;
+  --green:#1de9b6;
+  --warn:#ffb547;
+  --danger:#ff4b4b;
+  --text:#dde6f0;
+  --text2:#7a8fa8;
+  --text3:#3d5068;
+  --border:rgba(0,229,255,0.10);
+  --border2:rgba(0,229,255,0.22);
+  --border3:rgba(0,229,255,0.40);
+  --glow:0 0 20px rgba(0,229,255,0.15);
+  --display:'Syne',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --body:'DM Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden}
+
+/* GRID BG */
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);
+  background-size:64px 64px;pointer-events:none}
+
+/* SCANLINE */
+body::after{content:'';position:fixed;inset:0;z-index:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);
+  pointer-events:none}
+
+/* ═══ NAV ═══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:66px;
+  background:rgba(5,8,13,0.90);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 5%}
+.logo{font-family:var(--display);font-size:1.35rem;font-weight:800;color:var(--text);text-decoration:none;letter-spacing:-0.03em}
+.logo em{color:var(--cyan);font-style:normal}
+.logo sup{font-family:var(--mono);font-size:0.5rem;color:var(--text3);vertical-align:super;letter-spacing:0.1em;text-transform:uppercase;margin-left:2px}
+.nav-links{display:flex;gap:2.2rem;list-style:none}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;font-family:var(--mono);transition:color 0.2s}
+.nav-links a:hover{color:var(--cyan)}
+.nav-btn{background:var(--cyan);color:var(--bg);border:none;padding:0.5rem 1.3rem;font-family:var(--display);font-weight:700;font-size:0.8rem;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:background 0.2s}
+.nav-btn:hover{background:#33eeff}
+
+/* ═══ HERO ═══ */
+#hero{min-height:100vh;display:flex;align-items:center;padding-top:66px;position:relative;z-index:1;overflow:hidden}
+.hero-glow{position:absolute;top:20%;left:50%;transform:translate(-50%,-50%);
+  width:900px;height:500px;
+  background:radial-gradient(ellipse,rgba(0,229,255,0.06) 0%,transparent 65%);
+  pointer-events:none}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;
+  width:100%;max-width:1200px;margin:0 auto;padding:5rem 5% 4rem}
+
+.hero-eyebrow{display:inline-flex;align-items:center;gap:0.6rem;
+  background:rgba(0,229,255,0.06);border:1px solid var(--border2);
+  padding:0.28rem 0.8rem;font-family:var(--mono);font-size:0.68rem;
+  color:var(--cyan);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1.5rem}
+.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 1.8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+.hero-h1{font-family:var(--display);font-size:clamp(2.2rem,3.8vw,3.5rem);
+  font-weight:800;line-height:1.04;letter-spacing:-0.04em;margin-bottom:1.5rem}
+.hero-h1 .c1{color:var(--cyan)}
+.hero-h1 .c2{color:var(--orange)}
+
+.hero-sub{font-size:0.96rem;color:var(--text2);line-height:1.75;max-width:500px;margin-bottom:2rem}
+
+.kpi-row{display:flex;gap:2rem;margin-bottom:2.5rem}
+.kpi{display:flex;flex-direction:column}
+.kpi-n{font-family:var(--display);font-size:2.1rem;font-weight:800;color:var(--cyan);line-height:1}
+.kpi-l{font-family:var(--mono);font-size:0.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.2rem}
+.kpi-n.g{color:var(--green)}
+.kpi-n.o{color:var(--orange)}
+
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-p{background:var(--cyan);color:var(--bg);border:none;padding:0.78rem 1.8rem;
+  font-family:var(--display);font-weight:700;font-size:0.88rem;letter-spacing:0.04em;
+  clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);
+  cursor:pointer;transition:background 0.2s,transform 0.15s;text-decoration:none;display:inline-block}
+.btn-p:hover{background:#33eeff;transform:translateY(-2px)}
+.btn-s{background:transparent;color:var(--text);border:1px solid var(--border2);
+  padding:0.78rem 1.8rem;font-family:var(--display);font-weight:600;font-size:0.88rem;
+  cursor:pointer;transition:border-color 0.2s,color 0.2s;text-decoration:none;display:inline-block}
+.btn-s:hover{border-color:var(--cyan);color:var(--cyan)}
+
+/* ─── HERO DASHBOARD ─── */
+.hero-dashboard{background:var(--surface);border:1px solid var(--border);position:relative;overflow:hidden}
+.hero-dashboard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--orange),var(--green));opacity:0.7}
+.dash-bar{background:var(--surface2);border-bottom:1px solid var(--border);
+  padding:0.6rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.dash-bar-title{font-family:var(--mono);font-size:0.65rem;color:var(--cyan);letter-spacing:0.1em;text-transform:uppercase}
+.live-badge{display:flex;align-items:center;gap:0.35rem;font-family:var(--mono);font-size:0.6rem;color:var(--green)}
+.live-badge::before{content:'';width:5px;height:5px;background:var(--green);border-radius:50%;animation:blink 1.5s infinite}
+
+.sensor-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;padding:0.8rem}
+.s-card{background:var(--bg2);border:1px solid var(--border);padding:0.7rem;transition:border-color 0.3s}
+.s-card:hover{border-color:var(--border2)}
+.s-label{font-family:var(--mono);font-size:0.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.2rem}
+.s-val{font-family:var(--display);font-size:1.5rem;font-weight:700;color:var(--text);line-height:1}
+.s-unit{font-family:var(--mono);font-size:0.58rem;color:var(--text3);margin-left:2px}
+.s-bar{height:2px;background:var(--bg3);margin-top:0.5rem}
+.s-fill{height:100%;transition:width 1.2s ease;border-radius:0}
+.c-c{background:var(--cyan)}
+.c-g{background:var(--green)}
+.c-w{background:var(--warn)}
+.c-o{background:var(--orange)}
+
+.spark-box{margin:0 0.8rem 0.8rem;background:var(--bg2);border:1px solid var(--border);padding:0.7rem}
+.spark-lbl{font-family:var(--mono);font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.4rem}
+canvas.spark{display:block;width:100%;height:60px}
+
+.alert-row{margin:0 0.8rem 0.8rem;background:rgba(255,107,53,0.07);
+  border:1px solid rgba(255,107,53,0.2);
+  padding:0.5rem 0.75rem;display:flex;align-items:center;gap:0.5rem;
+  font-family:var(--mono);font-size:0.62rem;color:var(--orange)}
+
+/* ═══ TICKER ═══ */
+.ticker{background:rgba(0,229,255,0.04);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:0.55rem 0;overflow:hidden;white-space:nowrap;position:relative;z-index:1}
+.ticker-track{display:inline-block;animation:scroll-ticker 35s linear infinite;
+  font-family:var(--mono);font-size:0.68rem;color:var(--text2);letter-spacing:0.05em}
+.ticker-track b{color:var(--cyan);margin:0 0.5rem}
+@keyframes scroll-ticker{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+
+/* ═══ SECTIONS COMMON ═══ */
+section{position:relative;z-index:1}
+.wrap{max-width:1200px;margin:0 auto;padding:0 5%}
+.sec-pad{padding:7rem 0}
+.sec-pad-sm{padding:5rem 0}
+.bg2{background:var(--bg2)}
+
+.sec-tag{font-family:var(--mono);font-size:0.68rem;color:var(--cyan);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.75rem}
+.sec-tag::before{content:'// ';color:var(--text3)}
+.sec-h{font-family:var(--display);font-size:clamp(1.8rem,2.8vw,2.6rem);font-weight:800;
+  letter-spacing:-0.03em;line-height:1.1;margin-bottom:1rem}
+.sec-sub{color:var(--text2);font-size:0.94rem;line-height:1.75;max-width:560px;margin-bottom:3rem}
+
+/* ═══ ABOUT ═══ */
+#about .inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+#about p{color:var(--text2);line-height:1.8;font-size:0.92rem;margin-bottom:1.1rem}
+.stat-quad{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1rem}
+.sbox{background:var(--surface);border:1px solid var(--border);padding:1.5rem;border-top:2px solid var(--cyan);transition:border-top-color 0.3s}
+.sbox:hover{border-top-color:var(--orange)}
+.sbox .n{font-family:var(--display);font-size:2.4rem;font-weight:800;color:var(--cyan);line-height:1;margin-bottom:0.2rem}
+.sbox .d{font-family:var(--mono);font-size:0.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em}
+.tech-pills{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:2rem}
+.pill{background:rgba(0,229,255,0.06);border:1px solid var(--border);
+  padding:0.25rem 0.65rem;font-family:var(--mono);font-size:0.62rem;color:var(--text3);
+  text-transform:uppercase;letter-spacing:0.07em}
+
+/* ═══ SERVICES ═══ */
+#services .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.svc-card{background:var(--surface);border:1px solid var(--border);padding:2rem;
+  position:relative;overflow:hidden;transition:transform 0.22s,border-color 0.3s;cursor:default}
+.svc-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),transparent);
+  transform:scaleX(0);transform-origin:left;transition:transform 0.35s}
+.svc-card:hover{transform:translateY(-4px);border-color:var(--border2)}
+.svc-card:hover::after{transform:scaleX(1)}
+.svc-icon{width:46px;height:46px;background:rgba(0,229,255,0.07);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:1.25rem;margin-bottom:1.2rem}
+.svc-card h3{font-family:var(--display);font-size:1rem;font-weight:700;margin-bottom:0.7rem;color:var(--text)}
+.svc-card p{font-size:0.86rem;color:var(--text2);line-height:1.7;margin-bottom:1.2rem}
+.tag-row{display:flex;flex-wrap:wrap;gap:0.4rem}
+.tag{background:rgba(0,229,255,0.05);border:1px solid var(--border);
+  padding:0.18rem 0.48rem;font-family:var(--mono);font-size:0.58rem;
+  color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
+
+/* ═══ LIVE ANALYTICS PANEL ═══ */
+#analytics .analytic-grid{display:grid;grid-template-columns:2fr 1fr;gap:2rem}
+.chart-panel{background:var(--surface);border:1px solid var(--border);overflow:hidden}
+.cp-head{background:var(--surface2);border-bottom:1px solid var(--border);
+  padding:0.7rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.cp-title{font-family:var(--mono);font-size:0.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.09em}
+.cp-val{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--cyan)}
+.cp-body{padding:1rem}
+
+.metrics-stack{display:flex;flex-direction:column;gap:1rem}
+.m-card{background:var(--surface);border:1px solid var(--border);padding:1.2rem}
+.m-label{font-family:var(--mono);font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.4rem}
+.m-num{font-family:var(--display);font-size:1.8rem;font-weight:800;color:var(--text);line-height:1;margin-bottom:0.4rem}
+.m-bar{height:3px;background:var(--bg3)}
+.m-fill{height:100%;transition:width 1.5s ease}
+
+.oee-gauge{text-align:center;padding:1rem 0}
+.gauge-num{font-family:var(--display);font-size:2.8rem;font-weight:800;color:var(--green);line-height:1}
+.gauge-lbl{font-family:var(--mono);font-size:0.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em}
+
+/* ═══ CASE STUDIES ═══ */
+#cases .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.case-card{background:var(--surface);border:1px solid var(--border);
+  overflow:hidden;transition:transform 0.22s,border-color 0.3s;cursor:default}
+.case-card:hover{transform:translateY(-5px);border-color:var(--border2)}
+.case-thumb{height:140px;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;position:relative;border-bottom:1px solid var(--border);overflow:hidden}
+.case-thumb .label{position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(transparent,var(--surface));height:60%}
+.case-body{padding:1.2rem}
+.case-ind{font-family:var(--mono);font-size:0.6rem;color:var(--cyan);
+  text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem}
+.case-card h3{font-family:var(--display);font-size:0.92rem;font-weight:700;
+  line-height:1.35;margin-bottom:0.6rem;color:var(--text)}
+.case-card p{font-size:0.82rem;color:var(--text2);line-height:1.65;margin-bottom:1rem}
+.res-row{display:flex;gap:1.2rem;padding-top:1rem;border-top:1px solid var(--border)}
+.res-item{text-align:center}
+.res-v{font-family:var(--display);font-size:1.2rem;font-weight:800;color:var(--green)}
+.res-k{font-family:var(--mono);font-size:0.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em}
+
+/* ═══ BLOG ═══ */
+#blog .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.blog-card{background:var(--surface);border:1px solid var(--border);padding:1.5rem;
+  transition:transform 0.22s,border-color 0.3s;cursor:pointer}
+.blog-card:hover{transform:translateY(-4px);border-color:var(--border2)}
+.blog-cat{font-family:var(--mono);font-size:0.6rem;color:var(--orange);
+  text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.7rem}
+.blog-card h3{font-family:var(--display);font-size:0.92rem;font-weight:700;
+  line-height:1.4;margin-bottom:0.65rem;color:var(--text)}
+.blog-card p{font-size:0.83rem;color:var(--text2);line-height:1.65;margin-bottom:1rem}
+.blog-foot{display:flex;align-items:center;justify-content:space-between;
+  padding-top:0.85rem;border-top:1px solid var(--border)}
+.blog-date{font-family:var(--mono);font-size:0.58rem;color:var(--text3)}
+.read-link{font-family:var(--mono);font-size:0.62rem;color:var(--cyan);text-decoration:none}
+.read-link:hover{text-decoration:underline}
+
+/* ═══ CONTACT ═══ */
+#contact .cta-wrap{max-width:740px;margin:0 auto}
+.cta-box{background:var(--surface);border:1px solid var(--border);padding:3.5rem 3rem;
+  text-align:center;position:relative;overflow:hidden}
+.cta-box::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:280px;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.cta-box h2{font-family:var(--display);font-size:2rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:0.75rem}
+.cta-box > p{color:var(--text2);max-width:480px;margin:0 auto 2rem;font-size:0.9rem}
+
+.contact-form{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;text-align:left;margin-bottom:1rem}
+.col-span{grid-column:1/-1}
+.fg{display:flex;flex-direction:column;gap:0.35rem}
+.fg label{font-family:var(--mono);font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.09em}
+.fg input,.fg textarea,.fg select{
+  background:var(--bg);border:1px solid var(--border);color:var(--text);
+  padding:0.62rem 0.85rem;font-family:var(--body);font-size:0.86rem;
+  outline:none;transition:border-color 0.2s;width:100%}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--cyan)}
+.fg textarea{min-height:90px;resize:vertical}
+.fg select option{background:var(--bg)}
+.submit-btn{width:100%;background:var(--cyan);color:var(--bg);border:none;
+  padding:0.9rem;font-family:var(--display);font-weight:700;font-size:0.9rem;
+  letter-spacing:0.05em;cursor:pointer;transition:background 0.2s}
+.submit-btn:hover{background:#33eeff}
+.form-note{font-family:var(--mono);font-size:0.6rem;color:var(--text3);text-align:center;margin-top:0.75rem}
+
+/* ═══ FOOTER ═══ */
+footer{background:var(--bg);border-top:1px solid var(--border);padding:3.5rem 0 2rem}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.foot-brand .logo{display:block;margin-bottom:1rem;font-size:1.1rem;text-decoration:none}
+.foot-brand p{font-size:0.83rem;color:var(--text3);line-height:1.7;margin-bottom:1.25rem}
+.social-row{display:flex;gap:0.6rem}
+.social-btn{width:32px;height:32px;background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:0.65rem;color:var(--text3);cursor:pointer;
+  transition:border-color 0.2s,color 0.2s}
+.social-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.foot-col h4{font-family:var(--mono);font-size:0.65rem;color:var(--cyan);
+  text-transform:uppercase;letter-spacing:0.12em;margin-bottom:1rem}
+.foot-col ul{list-style:none}
+.foot-col ul li{margin-bottom:0.5rem}
+.foot-col ul li a{color:var(--text3);text-decoration:none;font-size:0.83rem;transition:color 0.2s}
+.foot-col ul li a:hover{color:var(--cyan)}
+.foot-bottom{border-top:1px solid var(--border);padding-top:1.5rem;
+  display:flex;align-items:center;justify-content:space-between}
+.foot-bottom p{font-family:var(--mono);font-size:0.62rem;color:var(--text3)}
+.foot-bottom a{color:var(--text3);text-decoration:none}
+.foot-bottom a:hover{color:var(--cyan)}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:1rem;margin:0 0 3rem}
+.div-line{flex:1;height:1px;background:var(--border)}
+.div-icon{font-family:var(--mono);font-size:0.65rem;color:var(--text3);white-space:nowrap;letter-spacing:0.08em}
+
+/* ANIMATIONS */
+@keyframes fadeup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.anim{opacity:0;animation:fadeup 0.7s ease forwards}
+.d1{animation-delay:0.1s}.d2{animation-delay:0.2s}.d3{animation-delay:0.3s}
+.d4{animation-delay:0.4s}.d5{animation-delay:0.5s}
+
+/* PROCESS STEPS */
+.process-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:3rem;position:relative}
+.process-row::before{content:'';position:absolute;top:24px;left:12.5%;right:12.5%;
+  height:1px;background:linear-gradient(90deg,var(--cyan),var(--orange),var(--green),var(--cyan));opacity:0.3;z-index:0}
+.step{text-align:center;padding:0 1rem;position:relative;z-index:1}
+.step-num{width:48px;height:48px;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:0.8rem;font-weight:500;color:var(--cyan);
+  margin:0 auto 1rem}
+.step h4{font-family:var(--display);font-size:0.9rem;font-weight:700;margin-bottom:0.4rem;color:var(--text)}
+.step p{font-size:0.8rem;color:var(--text2);line-height:1.5}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr}
+  #about .inner{grid-template-columns:1fr}
+  #services .grid3{grid-template-columns:1fr}
+  #analytics .analytic-grid{grid-template-columns:1fr}
+  #cases .grid3{grid-template-columns:1fr}
+  #blog .grid3{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .process-row{grid-template-columns:1fr 1fr;row-gap:2rem}
+  .process-row::before{display:none}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#"><em>IoTronix</em> Digitech<sup>AI</sup></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#analytics">Platform</a></li>
+    <li><a href="#cases">Case Studies</a></li>
+    <li><a href="#blog">Insights</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get Demo</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <!-- LEFT -->
+    <div>
+      <div class="hero-eyebrow anim d1"><span class="live-dot"></span>Industry 4.0 Intelligence Platform</div>
+      <h1 class="hero-h1 anim d2">
+        Delivering<br>
+        <span class="c1">Manufacturing</span><br>
+        <span class="c2">Certainty.</span>
+      </h1>
+      <p class="hero-sub anim d3">Zero Data Loss Assurance for modern factories. IoTronix Digitech integrates AI, IoT, and automation into your mechanical systems — cutting downtime, elevating quality, accelerating output.</p>
+
+      <div class="kpi-row anim d3">
+        <div class="kpi"><span class="kpi-n">30%</span><span class="kpi-l">Downtime Reduction</span></div>
+        <div class="kpi"><span class="kpi-n g">15%</span><span class="kpi-l">Productivity Boost</span></div>
+        <div class="kpi"><span class="kpi-n o">42%</span><span class="kpi-l">Defect Reduction</span></div>
+      </div>
+
+      <div class="hero-btns anim d4">
+        <a href="#contact" class="btn-p">Request a Demo</a>
+        <a href="#cases" class="btn-s">View Case Studies</a>
+      </div>
+    </div>
+
+    <!-- LIVE DASHBOARD -->
+    <div class="hero-dashboard anim d4">
+      <div class="dash-bar">
+        <span class="dash-bar-title">Live Plant Monitor — Line A3</span>
+        <span class="live-badge">LIVE FEED</span>
+      </div>
+
+      <div class="sensor-grid">
+        <div class="s-card">
+          <div class="s-label">Spindle RPM</div>
+          <div class="s-val" id="s-rpm">2,847<span class="s-unit">rpm</span></div>
+          <div class="s-bar"><div class="s-fill c-c" id="b-rpm" style="width:71%"></div></div>
+        </div>
+        <div class="s-card">
+          <div class="s-label">Temp (°C)</div>
+          <div class="s-val" id="s-tmp">68.3<span class="s-unit">°C</span></div>
+          <div class="s-bar"><div class="s-fill c-w" id="b-tmp" style="width:68%"></div></div>
+        </div>
+        <div class="s-card">
+          <div class="s-label">Vibration</div>
+          <div class="s-val" id="s-vib">0.12<span class="s-unit">mm/s</span></div>
+          <div class="s-bar"><div class="s-fill c-g" id="b-vib" style="width:12%"></div></div>
+        </div>
+        <div class="s-card">
+          <div class="s-label">OEE</div>
+          <div class="s-val" id="s-oee">91.4<span class="s-unit">%</span></div>
+          <div class="s-bar"><div class="s-fill c-g" id="b-oee" style="width:91%"></div></div>
+        </div>
+      </div>
+
+      <div class="spark-box">
+        <div class="spark-lbl">Production throughput — last 30 cycles</div>
+        <canvas class="spark" id="sparkCanvas" height="60"></canvas>
+      </div>
+
+      <div class="alert-row" id="alertRow">
+        <span>⚡</span> <span id="alertText">AI anomaly detected: Bearing wear prediction — 14 days to maintenance</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <b>▸</b> Predictive Maintenance Active <b>◆</b> Zero Downtime Protocol Engaged <b>▸</b> 99.97% Data Integrity <b>◆</b> 48 Machines Online <b>▸</b> AI Defect Detection Running <b>◆</b> Smart Factory Solutions <b>▸</b> IoT Integration Layer Live <b>◆</b> Digital Twin Sync 100% <b>▸</b> ERP Integration Active <b>◆</b> Industry 4.0 Compliant <b>▸</b> Real-Time Analytics Streaming
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="sec-pad bg2">
+  <div class="wrap">
+    <div class="inner">
+      <div>
+        <div class="sec-tag">About IoTronix Digitech</div>
+        <h2 class="sec-h">AI Reigns in the<br>Factory of Tomorrow</h2>
+        <p>At IoTronix Digitech, we envision a manufacturing industry where AI reigns supreme — transforming traditional mechanical practices into smart, data-driven processes that deliver measurable results from day one.</p>
+        <p>Our aim is to lead this revolution by providing cutting-edge AI solutions that boost efficiency, elevate quality, and foster sustainable growth across global manufacturing enterprises. We don't just connect machines — we make them intelligent.</p>
+        <p>As strategic partners, we embed ourselves in your operations, aligning our technology roadmap with your production goals. Our platform adapts to your existing infrastructure, minimizing disruption while maximizing digital ROI.</p>
+        <div class="tech-pills">
+          <span class="pill">OPC-UA</span>
+          <span class="pill">MQTT</span>
+          <span class="pill">Edge AI</span>
+          <span class="pill">Digital Twin</span>
+          <span class="pill">SCADA</span>
+          <span class="pill">IEC 62443</span>
+          <span class="pill">ISO 27001</span>
+          <span class="pill">REST API</span>
+        </div>
+      </div>
+      <div>
+        <div class="stat-quad">
+          <div class="sbox"><div class="n">500+</div><div class="d">Machines Connected</div></div>
+          <div class="sbox"><div class="n" style="color:var(--green)">99.97%</div><div class="d">Data Integrity Rate</div></div>
+          <div class="sbox"><div class="n" style="color:var(--orange)">30%</div><div class="d">Avg. Downtime Cut</div></div>
+          <div class="sbox"><div class="n" style="color:var(--warn)">48h</div><div class="d">Avg. Deployment Time</div></div>
+        </div>
+
+        <div style="margin-top:2rem">
+          <div class="divider"><div class="div-line"></div><div class="div-icon">// HOW WE WORK</div><div class="div-line"></div></div>
+          <div class="process-row">
+            <div class="step">
+              <div class="step-num">01</div>
+              <h4>Assess</h4>
+              <p>Full plant audit & digital readiness mapping</p>
+            </div>
+            <div class="step">
+              <div class="step-num" style="border-color:var(--orange);color:var(--orange)">02</div>
+              <h4>Connect</h4>
+              <p>IoT sensor deployment & edge gateway setup</p>
+            </div>
+            <div class="step">
+              <div class="step-num" style="border-color:var(--green);color:var(--green)">03</div>
+              <h4>Activate</h4>
+              <p>AI model training on live production data</p>
+            </div>
+            <div class="step">
+              <div class="step-num" style="border-color:var(--warn);color:var(--warn)">04</div>
+              <h4>Optimise</h4>
+              <p>Continuous learning & performance dashboards</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="sec-pad">
+  <div class="wrap">
+    <div class="sec-tag">Our Services</div>
+    <h2 class="sec-h">End-to-End Digital<br>Transformation</h2>
+    <p class="sec-sub">We cover the full stack of Industrial IoT — from hardware connectivity to AI-driven insights — designed for manufacturers who demand measurable outcomes.</p>
+
+    <div class="grid3">
+      <div class="svc-card">
+        <div class="svc-icon">🏭</div>
+        <h3>Smart Factory Solutions</h3>
+        <p>Transform your production floor with end-to-end IoT architecture. We deploy sensor networks, edge gateways, and AI inference engines that turn raw machine signals into operational intelligence.</p>
+        <div class="tag-row">
+          <span class="tag">IoT Mesh</span>
+          <span class="tag">Edge AI</span>
+          <span class="tag">SCADA Integration</span>
+          <span class="tag">Digital Twin</span>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">📊</div>
+        <h3>Data Analytics for Machinery</h3>
+        <p>Harness every data point from your machines. Our real-time analytics platform delivers predictive maintenance alerts, OEE dashboards, and defect root-cause analysis with zero data loss architecture.</p>
+        <div class="tag-row">
+          <span class="tag">Predictive ML</span>
+          <span class="tag">OEE Tracking</span>
+          <span class="tag">Anomaly Detection</span>
+          <span class="tag">Time-Series DB</span>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">⚙️</div>
+        <h3>Automation Integration</h3>
+        <p>Bridge your existing PLCs, SCADA, and MES systems with modern AI automation layers. We design closed-loop control systems that self-optimise based on real-time production variables.</p>
+        <div class="tag-row">
+          <span class="tag">PLC / HMI</span>
+          <span class="tag">MES / ERP</span>
+          <span class="tag">Closed-Loop AI</span>
+          <span class="tag">OPC-UA</span>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🔮</div>
+        <h3>AI Consulting & Strategy</h3>
+        <p>Not sure where to start? Our Industry 4.0 strategists audit your current operations, identify highest-ROI digital opportunities, and build a phased transformation roadmap tailored to your timeline.</p>
+        <div class="tag-row">
+          <span class="tag">Readiness Audit</span>
+          <span class="tag">ROI Modeling</span>
+          <span class="tag">Change Management</span>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">🛡️</div>
+        <h3>Industrial Cybersecurity</h3>
+        <p>Protect your operational technology with IEC 62443-compliant security frameworks. We implement network segmentation, zero-trust OT architectures, and continuous threat monitoring for critical plant assets.</p>
+        <div class="tag-row">
+          <span class="tag">IEC 62443</span>
+          <span class="tag">Zero Trust OT</span>
+          <span class="tag">SOC Monitoring</span>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-icon">☁️</div>
+        <h3>Cloud & Edge Infrastructure</h3>
+        <p>Hybrid cloud architecture designed for manufacturing latency requirements. We build resilient data pipelines that guarantee sub-100ms edge response while syncing full historical data to the cloud.</p>
+        <div class="tag-row">
+          <span class="tag">AWS/Azure IoT</span>
+          <span class="tag">K8s Edge</span>
+          <span class="tag">Time-Series</span>
+          <span class="tag">MQTT Broker</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE ANALYTICS -->
+<section id="analytics" class="sec-pad bg2">
+  <div class="wrap">
+    <div class="sec-tag">Live Analytics Platform</div>
+    <h2 class="sec-h">Real-Time Intelligence<br>at Every Level</h2>
+    <p class="sec-sub">Our IoTronix platform streams data from every machine, line, and shift — delivering actionable insights through interactive dashboards built for plant managers and engineers.</p>
+
+    <div class="analytic-grid">
+      <!-- MAIN CHART -->
+      <div>
+        <div class="chart-panel" style="margin-bottom:1rem">
+          <div class="cp-head">
+            <span class="cp-title">Production Output — Shifts 1–3 (Units/hr)</span>
+            <span class="cp-val" id="prodVal">247 u/hr</span>
+          </div>
+          <div class="cp-body">
+            <canvas id="mainChart" height="160" style="width:100%;display:block"></canvas>
+          </div>
+        </div>
+        <div class="chart-panel">
+          <div class="cp-head">
+            <span class="cp-title">Defect Rate Trend (%)</span>
+            <span class="cp-val" id="defectVal" style="color:var(--green)">1.2%</span>
+          </div>
+          <div class="cp-body">
+            <canvas id="defectChart" height="120" style="width:100%;display:block"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- METRICS SIDEBAR -->
+      <div class="metrics-stack">
+        <div class="chart-panel">
+          <div class="cp-head"><span class="cp-title">Overall OEE</span></div>
+          <div class="cp-body">
+            <div class="oee-gauge">
+              <canvas id="gaugeCanvas" width="160" height="100" style="display:block;margin:0 auto"></canvas>
+              <div class="gauge-num" id="oeeNum">91.4%</div>
+              <div class="gauge-lbl">Overall Equipment Effectiveness</div>
+            </div>
+          </div>
+        </div>
+        <div class="m-card">
+          <div class="m-label">Availability</div>
+          <div class="m-num" id="avail">96.2%</div>
+          <div class="m-bar"><div class="m-fill" id="availBar" style="width:96%;background:var(--cyan)"></div></div>
+        </div>
+        <div class="m-card">
+          <div class="m-label">Performance</div>
+          <div class="m-num" id="perf">94.7%</div>
+          <div class="m-bar"><div class="m-fill" id="perfBar" style="width:95%;background:var(--green)"></div></div>
+        </div>
+        <div class="m-card">
+          <div class="m-label">Quality Rate</div>
+          <div class="m-num" id="qual">98.8%</div>
+          <div class="m-bar"><div class="m-fill" id="qualBar" style="width:99%;background:var(--orange)"></div></div>
+        </div>
+        <div class="m-card">
+          <div class="m-label">Active Alerts</div>
+          <div class="m-num" id="alertNum" style="color:var(--warn)">3</div>
+          <div class="m-bar"><div class="m-fill" style="width:30%;background:var(--warn)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section id="cases" class="sec-pad">
+  <div class="wrap">
+    <div class="sec-tag">Case Studies</div>
+    <h2 class="sec-h">Transformation<br>in Action</h2>
+    <p class="sec-sub">Real results from real plants. Our mission is to empower manufacturing organizations to achieve excellence and redefine their business landscapes through AI — here's the evidence.</p>
+
+    <div class="grid3">
+      <div class="case-card">
+        <div class="case-thumb">⚙️<div class="label"></div></div>
+        <div class="case-body">
+          <div class="case-ind">Automotive — Tier 1 Supplier</div>
+          <h3>Predictive Bearing Failure Eliminates €2.1M Annual Downtime</h3>
+          <p>Deployed 340 vibration & temperature sensors across 12 CNC lines. AI model trained to detect bearing anomalies 14 days before failure — shifting from reactive to proactive maintenance.</p>
+          <div class="res-row">
+            <div class="res-item"><div class="res-v">34%</div><div class="res-k">Downtime ↓</div></div>
+            <div class="res-item"><div class="res-v">€2.1M</div><div class="res-k">Saved/yr</div></div>
+            <div class="res-item"><div class="res-v">18%</div><div class="res-k">OEE ↑</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-thumb">🏗️<div class="label"></div></div>
+        <div class="case-body">
+          <div class="case-ind">Steel Manufacturing</div>
+          <h3>AI Vision System Reduces Surface Defects by 47% in Rolling Mill</h3>
+          <p>Integrated high-speed AI camera arrays with the existing rolling mill PLC network. Real-time defect classification triggers automatic line adjustments, reducing scrap and rework across all product grades.</p>
+          <div class="res-row">
+            <div class="res-item"><div class="res-v">47%</div><div class="res-k">Defects ↓</div></div>
+            <div class="res-item"><div class="res-v">22%</div><div class="res-k">Scrap ↓</div></div>
+            <div class="res-item"><div class="res-v">12%</div><div class="res-k">Output ↑</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-thumb">💊<div class="label"></div></div>
+        <div class="case-body">
+          <div class="case-ind">Pharmaceutical — Batch Processing</div>
+          <h3>Digital Twin Cuts Batch Deviation Events by 61% Across 8 Reactors</h3>
+          <p>Built a full digital twin of the batch reactor network, enabling simulation-based process optimisation. AI monitors 280+ process parameters in real time with GMP-compliant data integrity and audit trails.</p>
+          <div class="res-row">
+            <div class="res-item"><div class="res-v">61%</div><div class="res-k">Deviations ↓</div></div>
+            <div class="res-item"><div class="res-v">100%</div><div class="res-k">GMP Audit Ready</div></div>
+            <div class="res-item"><div class="res-v">19%</div><div class="res-k">Yield ↑</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section id="blog" class="sec-pad bg2">
+  <div class="wrap">
+    <div class="sec-tag">Insights & Resources</div>
+    <h2 class="sec-h">Industry 4.0<br>Intelligence</h2>
+    <p class="sec-sub">Perspectives from our engineers, data scientists, and industry strategists — helping plant managers and technical leaders navigate the digital transformation journey.</p>
+
+    <div class="grid3">
+      <div class="blog-card">
+        <div class="blog-cat">Predictive Maintenance</div>
+        <h3>Why Vibration Signature Analysis Outperforms Traditional MTBF Scheduling</h3>
+        <p>Static maintenance intervals ignore real-world machine variance. We break down how FFT-based vibration analysis combined with ML delivers 3× better failure prediction accuracy.</p>
+        <div class="blog-foot">
+          <span class="blog-date">April 28, 2025</span>
+          <a href="#" class="read-link">Read →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-cat">Digital Twin</div>
+        <h3>Building a Production Digital Twin Without Replacing Legacy PLC Infrastructure</h3>
+        <p>Most factories can't afford a rip-and-replace approach. Our step-by-step guide shows how to overlay digital twin capability on top of existing SCADA and OPC-UA architectures.</p>
+        <div class="blog-foot">
+          <span class="blog-date">April 15, 2025</span>
+          <a href="#" class="read-link">Read →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-cat">AI & Quality</div>
+        <h3>Computer Vision for Inline Inspection: A Practical Guide for Plant Engineers</h3>
+        <p>From camera selection to model training cycles, this deep-dive covers everything a manufacturing engineer needs to evaluate and deploy AI vision for surface and dimensional inspection.</p>
+        <div class="blog-foot">
+          <span class="blog-date">March 30, 2025</span>
+          <a href="#" class="read-link">Read →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-cat">Industry 4.0 Strategy</div>
+        <h3>The IIoT ROI Framework: How to Build the Business Case Your CFO Will Approve</h3>
+        <p>Struggling to justify your IoT investment internally? We share the financial modelling approach that has helped our clients secure capex approval for smart factory programmes.</p>
+        <div class="blog-foot">
+          <span class="blog-date">March 12, 2025</span>
+          <a href="#" class="read-link">Read →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-cat">OT Security</div>
+        <h3>Securing the Connected Factory: IEC 62443 Explained for Operational Technology Teams</h3>
+        <p>As factory networks converge with IT, the attack surface grows. We decode the IEC 62443 standard and explain which zones and conduits matter most for a mid-size manufacturer.</p>
+        <div class="blog-foot">
+          <span class="blog-date">Feb 25, 2025</span>
+          <a href="#" class="read-link">Read →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-cat">Data Architecture</div>
+        <h3>Zero Data Loss in Industrial IoT: Architecture Patterns for Mission-Critical Plants</h3>
+        <p>A single dropped reading during a critical process can mean a compliance failure or missed anomaly. We detail the buffering, redundancy, and edge persistence patterns that guarantee full data fidelity.</p>
+        <div class="blog-foot">
+          <span class="blog-date">Feb 8, 2025</span>
+          <a href="#" class="read-link">Read →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="sec-pad">
+  <div class="wrap">
+    <div class="sec-tag">Contact Us</div>
+    <div class="cta-wrap">
+      <div class="cta-box">
+        <h2>Ready to Digitise Your Plant?</h2>
+        <p>Speak with an IoTronix Digitech engineer. We'll assess your current setup and show you exactly where AI can deliver measurable ROI — in a free 45-minute consultation.</p>
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <div class="fg">
+            <label>Full Name</label>
+            <input type="text" placeholder="John Smith" required>
+          </div>
+          <div class="fg">
+            <label>Work Email</label>
+            <input type="email" placeholder="john@company.com" required>
+          </div>
+          <div class="fg">
+            <label>Company</label>
+            <input type="text" placeholder="Acme Manufacturing Ltd" required>
+          </div>
+          <div class="fg">
+            <label>Role</label>
+            <select>
+              <option value="">Select your role</option>
+              <option>Plant Manager</option>
+              <option>Operations Director</option>
+              <option>Maintenance Engineer</option>
+              <option>CTO / IT Director</option>
+              <option>Business Owner</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="fg col-span">
+            <label>Industry / Sector</label>
+            <select>
+              <option value="">Select industry</option>
+              <option>Automotive</option>
+              <option>Aerospace & Defence</option>
+              <option>Pharmaceutical</option>
+              <option>Food & Beverage</option>
+              <option>Steel & Metals</option>
+              <option>Electronics</option>
+              <option>Oil & Gas</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="fg col-span">
+            <label>Tell us about your challenge</label>
+            <textarea placeholder="Brief description of your current manufacturing challenge or goal…"></textarea>
+          </div>
+          <div class="col-span">
+            <button type="submit" class="submit-btn">Request Free Consultation →</button>
+          </div>
+        </form>
+        <p class="form-note">// No commitment required. Response within 24 business hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="logo" href="#"><em>IoTronix</em> Digitech</a>
+        <p>Delivering manufacturing certainty through AI, IoT, and industrial automation. Zero Data Loss. Real Outcomes.</p>
+        <div class="social-row">
+          <div class="social-btn"> <a href="https://www.Linkedin.com/company/iotronix-digitech/">in</a></div>
+          <div class="social-btn">tw</div>
+          <div class="social-btn">yt</div>
+          <div class="social-btn"><a href="https://www.Instagram.com/iotronixdigitech?igsh=bXAzNTVibnpld3l6&utm_source=ig_contact_invite">IG</a></div>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">IoT Dashboard</a></li>
+          <li><a href="#">Predictive AI</a></li>
+          <li><a href="#">Digital Twin</a></li>
+          <li><a href="#">Edge Gateway</a></li>
+          <li><a href="#">API & Integrations</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Smart Factory</a></li>
+          <li><a href="#">Data Analytics</a></li>
+          <li><a href="#">Automation</a></li>
+          <li><a href="#">Cybersecurity</a></li>
+          <li><a href="#">AI Consulting</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Case Studies</a></li>
+          <li><a href="#">Blog & Insights</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>© 2026 IoTronix Digitech. All rights reserved.</p>
+      <p><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms of Use</a> &nbsp;·&nbsp; <a href="#">IoTronix Digitech Compliant</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════
+   LIVE SENSOR SIMULATION
+═══════════════════════════════════════════ */
+const sensors = {
+  rpm:  { el:'s-rpm', bar:'b-rpm', base:2800, range:200, unit:'rpm',  barBase:70, fmt:v=>Math.round(v).toLocaleString()+' <span class="s-unit">rpm</span>', color:'c-c' },
+  tmp:  { el:'s-tmp', bar:'b-tmp', base:68,   range:8,   unit:'°C',   barBase:68, fmt:v=>v.toFixed(1)+'<span class="s-unit">°C</span>', color:'c-w' },
+  vib:  { el:'s-vib', bar:'b-vib', base:0.12, range:0.06,unit:'mm/s', barBase:12, fmt:v=>v.toFixed(2)+'<span class="s-unit">mm/s</span>', color:'c-g' },
+  oee:  { el:'s-oee', bar:'b-oee', base:91.4, range:3,   unit:'%',    barBase:91, fmt:v=>v.toFixed(1)+'<span class="s-unit">%</span>', color:'c-g' }
+};
+
+function jitter(base, range){ return base + (Math.random()-0.5)*range*2 }
+
+function updateSensors(){
+  for(const k in sensors){
+    const s = sensors[k];
+    const v = jitter(s.base, s.range);
+    const el = document.getElementById(s.el);
+    const bar = document.getElementById(s.bar);
+    if(el) el.innerHTML = s.fmt(v);
+    if(bar){
+      const pct = Math.min(100, Math.max(0, s.barBase + (v - s.base) * (100/(s.range*4))));
+      bar.style.width = pct+'%';
+    }
+  }
+}
+setInterval(updateSensors, 1800);
+
+/* SPARKLINE */
+const sparkCanvas = document.getElementById('sparkCanvas');
+if(sparkCanvas){
+  const ctx = sparkCanvas.getContext('2d');
+  let sparkData = Array.from({length:30}, ()=>180+Math.random()*80);
+
+  function drawSpark(){
+    const W = sparkCanvas.offsetWidth || 320, H = 60;
+    sparkCanvas.width = W; sparkCanvas.height = H;
+    ctx.clearRect(0,0,W,H);
+    const min = Math.min(...sparkData), max = Math.max(...sparkData);
+    const pad = 4;
+    const pts = sparkData.map((v,i)=>[
+      pad + i*(W-2*pad)/(sparkData.length-1),
+      H-pad - (v-min)/(max-min+1)*(H-2*pad)
+    ]);
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], H);
+    pts.forEach(p=>ctx.lineTo(p[0],p[1]));
+    ctx.lineTo(pts[pts.length-1][0], H);
+    ctx.closePath();
+    const grad = ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0,'rgba(0,229,255,0.18)');
+    grad.addColorStop(1,'rgba(0,229,255,0.02)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0],pts[0][1]);
+    pts.forEach(p=>ctx.lineTo(p[0],p[1]));
+    ctx.strokeStyle = '#00e5ff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    // dot at last point
+    const lp = pts[pts.length-1];
+    ctx.beginPath();
+    ctx.arc(lp[0],lp[1],3,0,Math.PI*2);
+    ctx.fillStyle='#00e5ff';
+    ctx.fill();
+  }
+
+  function updateSpark(){
+    sparkData.shift();
+    sparkData.push(180+Math.random()*80);
+    drawSpark();
+  }
+  drawSpark();
+  setInterval(updateSpark, 1200);
+  window.addEventListener('resize', drawSpark);
+}
+
+/* ALERTS rotation */
+const alerts = [
+  'AI anomaly detected: Bearing wear prediction — 14 days to maintenance',
+  'Line B2: Temperature spike detected on Motor 4 — auto-throttle engaged',
+  'Predictive model: Spindle tool life at 87% — schedule replacement in Shift 3',
+  'AI Vision: Surface defect cluster detected on batch #A4422 — flagged for review',
+  'OEE Alert: Performance drop on Line A3 — root cause analysis initiated'
+];
+let alertIdx = 0;
+setInterval(()=>{
+  alertIdx = (alertIdx+1)%alerts.length;
+  const el = document.getElementById('alertText');
+  if(el){ el.style.opacity=0; setTimeout(()=>{ el.textContent=alerts[alertIdx]; el.style.opacity=1; }, 300); }
+}, 5000);
+
+/* ═══════════════════════════════════════════
+   MAIN PRODUCTION CHART
+═══════════════════════════════════════════ */
+const mainCanvas = document.getElementById('mainChart');
+if(mainCanvas){
+  const ctx2 = mainCanvas.getContext('2d');
+  const hours = ['06','07','08','09','10','11','12','13','14','15','16','17','18'];
+  let prodData = [195,210,230,225,248,252,241,238,255,247,260,245,250];
+
+  function drawMain(){
+    const W = mainCanvas.offsetWidth || 500, H = 160;
+    mainCanvas.width = W; mainCanvas.height = H;
+    ctx2.clearRect(0,0,W,H);
+    const padL=10,padR=10,padT=10,padB=24;
+    const dW = W-padL-padR, dH = H-padT-padB;
+    const min=180, max=280;
+
+    // grid lines
+    for(let i=0;i<=4;i++){
+      const y = padT + (dH/4)*i;
+      ctx2.beginPath();
+      ctx2.moveTo(padL,y); ctx2.lineTo(W-padR,y);
+      ctx2.strokeStyle='rgba(0,229,255,0.06)';
+      ctx2.lineWidth=1;
+      ctx2.stroke();
+      ctx2.fillStyle='rgba(122,143,168,0.6)';
+      ctx2.font='9px IBM Plex Mono';
+      ctx2.fillText(Math.round(max-(max-min)/4*i), padL, y-3);
+    }
+
+    const pts = prodData.map((v,i)=>[
+      padL + i*dW/(prodData.length-1),
+      padT + dH - (v-min)/(max-min)*dH
+    ]);
+
+    // fill
+    ctx2.beginPath();
+    ctx2.moveTo(pts[0][0], padT+dH);
+    pts.forEach(p=>ctx2.lineTo(p[0],p[1]));
+    ctx2.lineTo(pts[pts.length-1][0], padT+dH);
+    ctx2.closePath();
+    const g = ctx2.createLinearGradient(0,padT,0,padT+dH);
+    g.addColorStop(0,'rgba(0,229,255,0.12)');
+    g.addColorStop(1,'rgba(0,229,255,0.01)');
+    ctx2.fillStyle=g; ctx2.fill();
+
+    // line
+    ctx2.beginPath();
+    ctx2.moveTo(pts[0][0],pts[0][1]);
+    pts.forEach(p=>ctx2.lineTo(p[0],p[1]));
+    ctx2.strokeStyle='#00e5ff'; ctx2.lineWidth=2; ctx2.stroke();
+
+    // hour labels
+    hours.forEach((h,i)=>{
+      const x = padL + i*dW/(hours.length-1);
+      ctx2.fillStyle='rgba(61,80,104,0.8)';
+      ctx2.font='9px IBM Plex Mono';
+      ctx2.textAlign='center';
+      ctx2.fillText(h+':00', x, H-4);
+    });
+    ctx2.textAlign='left';
+  }
+
+  function updateMain(){
+    prodData.shift();
+    prodData.push(210+Math.random()*55);
+    const last = prodData[prodData.length-1];
+    const pv = document.getElementById('prodVal');
+    if(pv) pv.textContent = Math.round(last)+' u/hr';
+    drawMain();
+  }
+  drawMain();
+  setInterval(updateMain, 2000);
+  window.addEventListener('resize', drawMain);
+}
+
+/* DEFECT CHART */
+const defCanvas = document.getElementById('defectChart');
+if(defCanvas){
+  const ctx3 = defCanvas.getContext('2d');
+  let defData = [3.2,2.8,2.4,2.1,1.9,1.7,1.5,1.4,1.3,1.2,1.2,1.1,1.2];
+
+  function drawDefect(){
+    const W = defCanvas.offsetWidth||500, H=120;
+    defCanvas.width=W; defCanvas.height=H;
+    ctx3.clearRect(0,0,W,H);
+    const padL=10,padR=10,padT=10,padB=20;
+    const dW=W-padL-padR, dH=H-padT-padB;
+    const mn=0.5, mx=4.0;
+    const pts = defData.map((v,i)=>[padL+i*dW/(defData.length-1), padT+dH-(v-mn)/(mx-mn)*dH]);
+    ctx3.beginPath();
+    ctx3.moveTo(pts[0][0],padT+dH);
+    pts.forEach(p=>ctx3.lineTo(p[0],p[1]));
+    ctx3.lineTo(pts[pts.length-1][0],padT+dH);
+    ctx3.closePath();
+    const g=ctx3.createLinearGradient(0,padT,0,padT+dH);
+    g.addColorStop(0,'rgba(29,233,182,0.15)');
+    g.addColorStop(1,'rgba(29,233,182,0.01)');
+    ctx3.fillStyle=g; ctx3.fill();
+    ctx3.beginPath();
+    ctx3.moveTo(pts[0][0],pts[0][1]);
+    pts.forEach(p=>ctx3.lineTo(p[0],p[1]));
+    ctx3.strokeStyle='#1de9b6'; ctx3.lineWidth=2; ctx3.stroke();
+  }
+
+  function updateDefect(){
+    defData.shift();
+    defData.push(Math.max(0.8, defData[defData.length-1]+(Math.random()-0.55)*0.1));
+    const dv = document.getElementById('defectVal');
+    if(dv) dv.textContent = defData[defData.length-1].toFixed(1)+'%';
+    drawDefect();
+  }
+  drawDefect();
+  setInterval(updateDefect, 2500);
+  window.addEventListener('resize', drawDefect);
+}
+
+/* OEE GAUGE */
+const gaugeC = document.getElementById('gaugeCanvas');
+if(gaugeC){
+  const gc = gaugeC.getContext('2d');
+  let oeeVal = 91.4;
+
+  function drawGauge(){
+    const W=160, H=100;
+    gc.clearRect(0,0,W,H);
+    const cx=80, cy=85, r=65, startA=Math.PI, endA=0;
+    // bg arc
+    gc.beginPath();
+    gc.arc(cx,cy,r,startA,endA);
+    gc.strokeStyle='rgba(0,229,255,0.08)'; gc.lineWidth=8; gc.stroke();
+    // value arc
+    const valA = Math.PI + (oeeVal/100)*Math.PI;
+    gc.beginPath();
+    gc.arc(cx,cy,r,startA,valA);
+    gc.strokeStyle='#1de9b6'; gc.lineWidth=8; gc.lineCap='round'; gc.stroke();
+  }
+
+  function updateGauge(){
+    oeeVal = 88 + Math.random()*6;
+    const el=document.getElementById('oeeNum');
+    if(el) el.textContent=oeeVal.toFixed(1)+'%';
+    drawGauge();
+  }
+  drawGauge();
+  setInterval(updateGauge, 3000);
+}
+
+/* FORM SUBMIT */
+function handleSubmit(e){
+  e.preventDefault();
+  const btn = e.target.querySelector('.submit-btn');
+  btn.textContent = '✓ Request Sent — We\'ll be in touch within 24hrs';
+  btn.style.background = '#1de9b6';
+  btn.style.color = '#05080d';
+  btn.disabled = true;
+  setTimeout(()=>{ btn.textContent='Request Free Consultation →'; btn.style.background=''; btn.style.color=''; btn.disabled=false; }, 4000);
+}
+
+/* SMOOTH NAV SCROLL */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const t = document.querySelector(a.getAttribute('href'));
+    if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
+  });
+});
+
+/* INTERSECTION OBSERVER for scroll animations */
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.style.opacity='1';
+      entry.target.style.transform='translateY(0)';
+    }
+  });
+},{threshold:0.1});
+
+document.querySelectorAll('.svc-card,.case-card,.blog-card,.sbox,.m-card').forEach(el=>{
+  el.style.opacity='0';
+  el.style.transform='translateY(20px)';
+  el.style.transition='opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
